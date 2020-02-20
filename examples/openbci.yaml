@@ -1,0 +1,27 @@
+graphs:
+  - id: Gateway
+    nodes:
+    - id: acquire
+      module: timeflux_openbci.nodes.driver
+      class: OpenBCI
+      params:
+        board: synthetic
+    - id: select
+      module: timeflux.nodes.query
+      class: LocQuery
+      params:
+        key: [ eeg_1, eeg_2, eeg_3, eeg_4, eeg_5, eeg_6, eeg_7, eeg_8 ]
+    - id: send
+      module: timeflux_mindaffect.nodes.utopia
+      class: Client
+      params:
+        host: 127.0.0.1
+    - id: display
+      module: timeflux.nodes.debug
+      class: Display
+    edges:
+    - source: acquire
+      target: select
+    - source: select
+      target: send
+    rate: 10

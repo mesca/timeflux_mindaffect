@@ -1,1 +1,2 @@
+mindaffectBCI
 git+https://github.com/timeflux/timeflux

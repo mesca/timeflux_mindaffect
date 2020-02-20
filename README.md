@@ -1,7 +1,7 @@
-# An example Timeflux plugin
+# MindAffect plugin
 
-This is an example plugin that provides a simple arithmetic node. Use it as a template
-to develop your own plugins.
+This plugin is a gateway between Timeflux and the Utopia Hub. It makes the MindAffect
+decoder compatible with any device supported by Timeflux.
 
 ## Installation
 
@@ -11,5 +11,5 @@ You can then install this plugin in the ``timeflux`` environment:
 
 ```
 $ conda activate timeflux
-$ pip install git+https://github.com/timeflux/timeflux_example
+$ pip install git+https://github.com/timeflux/timeflux_mindaffect
 ```
