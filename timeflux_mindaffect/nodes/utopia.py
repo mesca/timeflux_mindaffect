@@ -3,6 +3,9 @@
 from mindaffectBCI.utopiaclient import UtopiaClient, DataHeader, DataPacket, getTimeStamp
 from timeflux.core.exceptions import WorkerInterrupt
 from timeflux.core.node import Node
+from timeflux.core.sync import Server
+from timeflux.helpers.background import Task
+
 
 class Client(Node):
 
@@ -26,6 +29,8 @@ class Client(Node):
             port (int): The Utopia Hub port.
             timeout (int): Delay (in ms) after which we stop trying to connect.
         """
+
+        # Connect to the Utopia Hub
         self._client = UtopiaClient()
         try :
             self._client.autoconnect(host, port, timeout_ms=timeout)
@@ -33,6 +38,10 @@ class Client(Node):
             pass
         if not self._client.isConnected:
             raise WorkerInterrupt('Could not connect to Utopia hub')
+
+        # Start the sync server
+        self._task = Task(Server(), 'start').start()
+
 
     def update(self):
         if self.i.ready():
@@ -48,3 +57,4 @@ class Client(Node):
 
     def terminate(self):
         self._client.disconnect()
+        self._task.stop()
