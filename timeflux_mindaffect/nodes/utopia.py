@@ -39,6 +39,9 @@ class Client(Node):
         if not self._client.isConnected:
             raise WorkerInterrupt('Could not connect to Utopia hub')
 
+        # Keep track of the header so it is sent only once
+        self._header = None
+
         # Start the sync server
         self._task = Task(Server(), 'start').start()
 
@@ -47,13 +50,13 @@ class Client(Node):
         if self.i.ready():
             now = getTimeStamp()
             data = self.i.data.values.tolist()
-            rate = self.i.meta['rate']
-            channels = self.i.data.shape[1]
-            labels = list(self.i.data.columns)
-            header = DataHeader(now, rate, channels, labels)
-            packet = DataPacket(now, data)
-            self._client.sendMessage(header)
-            self._client.sendMessage(packet)
+            if not self._header:
+                rate = self.i.meta['rate']
+                channels = self.i.data.shape[1]
+                labels = list(self.i.data.columns)
+                self._header = DataHeader(now, rate, channels, labels)
+                self._client.sendMessage(self._header)
+            self._client.sendMessage(DataPacket(now, data))
 
     def terminate(self):
         self._client.disconnect()
