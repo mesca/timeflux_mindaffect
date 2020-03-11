@@ -1,2 +1,2 @@
-mindaffectBCI
+git+https://github.com/mindaffect/pymindaffectBCI
 git+https://github.com/timeflux/timeflux
